@@ -1,0 +1,21 @@
+module(
+    name = "rules_tf",
+    version = "0.1.0",
+)
+
+bazel_dep(name = "rules_license", version = "0.0.8")
+bazel_dep(name = "aspect_bazel_lib", version = "2.4.1")
+bazel_dep(name = "platforms", version = "0.0.8")
+bazel_dep(name = "buildifier_prebuilt", version = "6.4.0")
+
+tf = use_extension("@rules_tf//tf:extensions.bzl", "tf")
+
+#tf.toolchain(version = "1.5.4")
+use_repo(
+    tf,
+    "tf_executable",
+)
+
+register_toolchains(
+    "@tf_executable//:all",
+)
