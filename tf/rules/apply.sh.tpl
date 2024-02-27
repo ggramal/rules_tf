@@ -10,6 +10,7 @@ readonly COREUTILS="{{coreutils_path}}"
 
 ${TAR} -C ${TF_DIR} -xzf ${TF_INIT_TAR}
 ${TF} -chdir=${TF_DIR} apply -parallelism=${TF_PARALLELISM} ${TF_PLAN}
+readonly TF_EXIT=$?
 
 # Invalidate plan build cache.
 # This is needed because after apply 
@@ -17,3 +18,5 @@ ${TF} -chdir=${TF_DIR} apply -parallelism=${TF_PARALLELISM} ${TF_PLAN}
 # and output of tf_plan target is cached
 # so it will not be rebuilt
 ${COREUTILS} rm -f $(${COREUTILS} readlink ${TF_DIR}/${TF_PLAN})
+
+exit $TF_EXIT
