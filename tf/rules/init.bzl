@@ -7,8 +7,12 @@ load("//tf/rules:providers.bzl", "TerraformInitInfo")
 def _impl(ctx):
     tar = ctx.toolchains["@aspect_bazel_lib//lib:tar_toolchain_type"]
     tf = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
+    backend = "false" 
+    if ctx.attr.backend:
+        backend = "true"
+        
 
-    out = ctx.actions.declare_file("init.tar.gz")
+    out = ctx.actions.declare_file("init_%s.tar.gz" % ctx.label.name)
 
     launcher = ctx.actions.declare_file("init_%s.sh" % ctx.label.name)
 
@@ -21,6 +25,7 @@ def _impl(ctx):
             "{{tar_path}}": tar.tarinfo.binary.path,
             "{{tf_path}}": tf.exec.path,
             "{{tf_dir}}": ctx.label.package,
+            "{{tf_backend}}": backend,
         },
     )
 
@@ -46,6 +51,10 @@ tf_init = rule(
             mandatory = True,
             allow_files = True,
         ),
+        "backend": attr.bool(
+            default = True,
+        ),
+
         "_template": attr.label(default = ":init.sh.tpl", allow_single_file = True),
     },
     toolchains = [

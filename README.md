@@ -265,3 +265,87 @@ then
 `bazel run //path/to/tf:tf -- plan -output $(pwd)/plan` 
 
 `bazel run //path/to/tf:tf -- import '...'`
+
+### Terraform backend
+
+Its very common to store secrets in terraform state. So in most cases you should restrict access to your state file. Nevertheless developers should be able to run commands like `bazel test //...`. In order to achive that You can specify `backend = False` in `tf_init` rule in order like so
+
+```python
+load(
+    "@rules_tf//tf:defs.bzl",
+    "tf_apply",
+    "tf_bin",
+    "tf_fmt_test",
+    "tf_init",
+    "tf_plan",
+    "tf_validate_test",
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob(
+        [
+            "*.tf",
+            "*.tfvars",
+        ],
+    ) + [
+        ".terraform.lock.hcl",
+        "//infra/terraform/modules",
+    ],
+    visibility = ["//visibility:__pkg__"],
+)
+
+tf_validate_test(
+    name = "validate",
+    srcs = [":srcs"],
+    init = ":init_for_tests",
+)
+
+tf_fmt_test(
+    name = "fmt",
+    srcs = [":srcs"],
+)
+
+tf_init(
+    name = "init_for_tests",
+    srcs = [
+        ".terraform.lock.hcl",
+        "main.tf",
+        "//infra/terraform/modules",
+    ],
+    backend = False,
+)
+
+tf_init(
+    name = "init",
+    srcs = [
+        ".terraform.lock.hcl",
+        "main.tf",
+        "//infra/terraform/modules",
+    ],
+    tags = ["manual"],
+)
+
+tf_plan(
+    name = "plan",
+    srcs = [":srcs"],
+    init = ":init",
+    parallelism = "100",
+    tags = ["manual"],
+)
+
+tf_apply(
+    name = "apply",
+    srcs = [":srcs"],
+    init = ":init",
+    plan = ":plan",
+    tags = ["manual"],
+)
+
+tf_bin(
+    name = "tf",
+    srcs = [":srcs"],
+    init = ":init",
+    tags = ["manual"],
+)
+```
