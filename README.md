@@ -268,7 +268,7 @@ then
 
 ### Terraform backend
 
-Its very common to store secrets in terraform state. So in most cases you should restrict access to your state file. Nevertheless developers should be able to run commands like `bazel test //...`. In order to achive that You can specify `backend = False` in `tf_init` rule in order like so
+`terraform init` needs to initialize the backend (state storage) for this user executing the command needs access to tf backend. Its very common to store secrets in terraform state. So in most cases you should restrict access to your state file. Nevertheless developers should be able to run commands like `bazel test //...`. In order to achive that You can specify `backend = False` in `tf_init` rule in order like so
 
 ```python
 load(
