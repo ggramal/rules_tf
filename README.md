@@ -41,16 +41,13 @@ filegroup(
             "*.tf",
             "*.tfvars",
         ],
-    ) + [
-        ".terraform.lock.hcl",
-    ],
+    )
     visibility = ["//visibility:__pkg__"],
 )
 
 tf_init(
     name = "init",
     srcs = [
-        ".terraform.lock.hcl",
         "main.tf", #Files where modules are defined
     ],
 )
@@ -114,9 +111,7 @@ filegroup(
             "*.tf",
             "*.tfvars",
         ],
-    ) + [
-        ".terraform.lock.hcl",
-    ],
+    )
     visibility = ["//visibility:__pkg__"],
 )
 
@@ -134,7 +129,6 @@ tf_fmt_test(
 tf_init(
     name = "init",
     srcs = [
-        ".terraform.lock.hcl",
         "main.tf", #Files where modules are defined
     ],
 )
@@ -175,7 +169,6 @@ filegroup(
             "*.tfvars",
         ],
     ) + [
-        ".terraform.lock.hcl",
         "//modules", #pass filegroup from modules dir
     ],
     visibility = ["//visibility:__pkg__"],
@@ -195,7 +188,6 @@ tf_fmt_test(
 tf_init(
     name = "init",
     srcs = [
-        ".terraform.lock.hcl",
         "main.tf",
         "//modules", #pass filegroup from modules dir
     ],
@@ -237,7 +229,6 @@ filegroup(
             "*.tfvars",
         ],
     ) + [
-        ".terraform.lock.hcl",
         "//modules",
     ],
     visibility = ["//visibility:__pkg__"],
@@ -246,7 +237,6 @@ filegroup(
 tf_init(
     name = "init",
     srcs = [
-        ".terraform.lock.hcl",
         "main.tf",
         "//modules",
     ],
@@ -289,7 +279,6 @@ filegroup(
             "*.tfvars",
         ],
     ) + [
-        ".terraform.lock.hcl",
         "//infra/terraform/modules",
     ],
     visibility = ["//visibility:__pkg__"],
@@ -309,7 +298,6 @@ tf_fmt_test(
 tf_init(
     name = "init_for_tests",
     srcs = [
-        ".terraform.lock.hcl",
         "main.tf",
         "//infra/terraform/modules",
     ],
@@ -319,7 +307,6 @@ tf_init(
 tf_init(
     name = "init",
     srcs = [
-        ".terraform.lock.hcl",
         "main.tf",
         "//infra/terraform/modules",
     ],
