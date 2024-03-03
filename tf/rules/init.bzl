@@ -4,8 +4,7 @@ This module contains build rules for tf init.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo")
 
-_TF_INIT_SCRIPT = """
-#!/usr/bin/env bash
+_TF_INIT_SCRIPT = """#!/usr/bin/env bash
 set -o pipefail -o errexit -o nounset
 
 {tf_path} -chdir={tf_dir} init -backend={tf_backend}

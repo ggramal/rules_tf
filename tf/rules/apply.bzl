@@ -4,8 +4,7 @@ This module contains run rules for tf apply.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo", "TerraformPlanInfo")
 
-_TF_APPLY_SCRIPT = """
-#!/usr/bin/env bash
+_TF_APPLY_SCRIPT = """#!/usr/bin/env bash
 
 {tar_path} -C {tf_dir} -xzf {tf_init_tar}
 {tf_path} -chdir={tf_dir} apply -parallelism={tf_parallelism} {tf_plan}

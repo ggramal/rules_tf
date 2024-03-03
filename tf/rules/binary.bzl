@@ -4,8 +4,7 @@ This module contains run rules for running tf.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo")
 
-_TF_BINARY_SCRIPT = """
-#!/usr/bin/env bash
+_TF_BINARY_SCRIPT = """#!/usr/bin/env bash
 set -o pipefail -o errexit -o nounset
 
 {tar_path} -C {tf_dir} -xzf {tf_init_tar}

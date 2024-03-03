@@ -4,8 +4,7 @@ This module contains build rules for tf plan.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo", "TerraformPlanInfo")
 
-_TF_PLAN_SCRIPT = """
-#!/usr/bin/env bash
+_TF_PLAN_SCRIPT = """#!/usr/bin/env bash
 set -o pipefail -o errexit -o nounset
 
 readonly TF_OUT_FILE=$({coreutils_path} basename {tf_out})
