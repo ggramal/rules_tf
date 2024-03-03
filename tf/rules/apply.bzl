@@ -4,6 +4,24 @@ This module contains run rules for tf apply.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo", "TerraformPlanInfo")
 
+_TF_APPLY_SCRIPT = """
+#!/usr/bin/env bash
+
+{tar_path} -C {tf_dir} -xzf {tf_init_tar}
+{tf_path} -chdir={tf_dir} apply -parallelism={tf_parallelism} {tf_plan}
+
+TF_EXIT=$?
+
+# Invalidate plan build cache.
+# This is needed because after apply 
+# generated plan file becomes stale 
+# and output of tf_plan target is cached
+# so it will not be rebuilt
+{coreutils_path} rm -f $({coreutils_path} readlink {tf_dir}/{tf_plan})
+
+exit $TF_EXIT
+"""
+
 def _impl(ctx):
     tf_init_tar = ctx.attr.init[TerraformInitInfo].init_archive
     tf_plan_file = ctx.attr.plan[TerraformPlanInfo].plan
@@ -19,19 +37,20 @@ def _impl(ctx):
 
     launcher = ctx.actions.declare_file("apply_%s.sh" % ctx.label.name)
 
-    ctx.actions.expand_template(
-        template = ctx.file._template,
+    script = _TF_APPLY_SCRIPT.format(
+        tf_init_tar = tf_init_tar_path,
+        tar_path = tar.tarinfo.binary.path,
+        tf_path = tf.exec.path,
+        tf_parallelism = ctx.attr.parallelism,
+        tf_dir = ctx.label.package,
+        tf_plan = tf_plan_file.basename,
+        coreutils_path = coreutils.bin.path,
+    )
+
+    ctx.actions.write(
         output = launcher,
+        content = script,
         is_executable = True,
-        substitutions = {
-            "{{tf_init_tar}}": tf_init_tar_path,
-            "{{tar_path}}": tar.tarinfo.binary.path,
-            "{{tf_path}}": tf.exec.path,
-            "{{tf_parallelism}}": ctx.attr.parallelism,
-            "{{tf_dir}}": ctx.label.package,
-            "{{tf_plan}}": tf_plan_file.basename,
-            "{{coreutils_path}}": coreutils.bin.path,
-        },
     )
 
     deps = ctx.files.srcs + ctx.files.init + ctx.files.plan + tar.default.files.to_list() + [
@@ -63,7 +82,6 @@ tf_apply = rule(
         "parallelism": attr.string(
             default = "10",
         ),
-        "_template": attr.label(default = ":apply.sh.tpl", allow_single_file = True),
     },
     toolchains = [
         "@aspect_bazel_lib//lib:tar_toolchain_type",

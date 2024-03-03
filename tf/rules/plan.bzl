@@ -4,6 +4,17 @@ This module contains build rules for tf plan.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo", "TerraformPlanInfo")
 
+_TF_PLAN_SCRIPT = """
+#!/usr/bin/env bash
+set -o pipefail -o errexit -o nounset
+
+readonly TF_OUT_FILE=$({coreutils_path} basename {tf_out})
+
+{tar_path} -C {tf_dir} -xzf {tf_init_tar}
+{tf_cmd}
+{coreutils_path} cp {tf_dir}/$TF_OUT_FILE {tf_out}
+"""
+
 def _impl(ctx):
     tf_init_tar = ctx.attr.init[TerraformInitInfo].init_archive
 
@@ -16,19 +27,29 @@ def _impl(ctx):
 
     launcher = ctx.actions.declare_file("plan_%s.sh" % ctx.label.name)
 
-    ctx.actions.expand_template(
-        template = ctx.file._template,
+    tf_cmd = "{tf_path} -chdir={tf_dir} plan -out=$TF_OUT_FILE -parallelism={tf_parallelism}"
+
+    if ctx.attr.silent_refresh:
+        tf_cmd = "{tf_path} -chdir={tf_dir} plan -out=$TF_OUT_FILE -parallelism={tf_parallelism} > /dev/null && {tf_path} -chdir={tf_dir} show $TF_OUT_FILE"
+
+    script = _TF_PLAN_SCRIPT.format(
+        tf_init_tar = tf_init_tar.path,
+        tar_path = tar.tarinfo.binary.path,
+        tf_path = tf.exec.path,
+        tf_cmd = tf_cmd.format(
+            tf_parallelism = ctx.attr.parallelism,
+            tf_path = tf.exec.path,
+            tf_dir = ctx.label.package,
+        ),
+        tf_dir = ctx.label.package,
+        tf_out = out.path,
+        coreutils_path = coreutils.bin.path,
+    )
+
+    ctx.actions.write(
         output = launcher,
+        content = script,
         is_executable = True,
-        substitutions = {
-            "{{tf_init_tar}}": tf_init_tar.path,
-            "{{tar_path}}": tar.tarinfo.binary.path,
-            "{{tf_path}}": tf.exec.path,
-            "{{tf_parallelism}}": ctx.attr.parallelism,
-            "{{tf_dir}}": ctx.label.package,
-            "{{tf_out}}": out.path,
-            "{{coreutils_path}}": coreutils.bin.path,
-        },
     )
 
     deps = depset(
@@ -68,7 +89,9 @@ tf_plan = rule(
         "parallelism": attr.string(
             default = "10",
         ),
-        "_template": attr.label(default = ":plan.sh.tpl", allow_single_file = True),
+        "silent_refresh": attr.bool(
+            default = True,
+        ),
     },
     toolchains = [
         "@aspect_bazel_lib//lib:tar_toolchain_type",

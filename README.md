@@ -217,7 +217,7 @@ It is possible to run arbitrary tf commands. This is a BUILD example
 
 load(
     "@rules_tf//tf:defs.bzl",
-    "tf_bin",
+    "tf_binary",
     "tf_init",
 )
 
@@ -242,7 +242,7 @@ tf_init(
     ],
 )
 
-tf_bin(
+tf_binary(
     name = "tf",
     srcs = [":srcs"],
     init = ":init",
@@ -264,7 +264,7 @@ then
 load(
     "@rules_tf//tf:defs.bzl",
     "tf_apply",
-    "tf_bin",
+    "tf_binary",
     "tf_fmt_test",
     "tf_init",
     "tf_plan",
@@ -329,7 +329,7 @@ tf_apply(
     tags = ["manual"],
 )
 
-tf_bin(
+tf_binary(
     name = "tf",
     srcs = [":srcs"],
     init = ":init",
