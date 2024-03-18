@@ -29,7 +29,7 @@ def _impl(ctx):
     tf_cmd = "{tf_path} -chdir={tf_dir} plan -out=$TF_OUT_FILE -parallelism={tf_parallelism}"
 
     if ctx.attr.silent_refresh:
-        tf_cmd = "{tf_path} -chdir={tf_dir} plan -out=$TF_OUT_FILE -parallelism={tf_parallelism} > /dev/null && {tf_path} -chdir={tf_dir} show $TF_OUT_FILE"
+        tf_cmd = "{tf_path} -chdir={tf_dir} plan -out=$TF_OUT_FILE -parallelism={tf_parallelism} > /dev/null && {tf_path} -chdir={tf_dir} show $TF_OUT_FILE || exit $?"
 
     script = _TF_PLAN_SCRIPT.format(
         tf_init_tar = tf_init_tar.path,
