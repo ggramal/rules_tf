@@ -32,10 +32,10 @@ def _impl(ctx):
         out_tar = out.path,
         tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_cmd = tf_cmd.format(
-	    tf_path = tf.exec.path,
-	    tf_dir  = ctx.label.package,
-	    tf_backend = backend,
-	),
+            tf_path = tf.exec.path,
+            tf_dir = ctx.label.package,
+            tf_backend = backend,
+        ),
         tf_dir = ctx.label.package,
     )
 
