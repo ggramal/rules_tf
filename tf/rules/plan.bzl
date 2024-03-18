@@ -33,7 +33,7 @@ def _impl(ctx):
 
     script = _TF_PLAN_SCRIPT.format(
         tf_init_tar = tf_init_tar.path,
-        tar_path = tar.tarinfo.binary.path,
+        tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_path = tf.exec.path,
         tf_cmd = tf_cmd.format(
             tf_parallelism = ctx.attr.parallelism,
@@ -42,7 +42,7 @@ def _impl(ctx):
         ),
         tf_dir = ctx.label.package,
         tf_out = out.path,
-        coreutils_path = coreutils.bin.path,
+        coreutils_path = "" if ctx.attr.system_utils else coreutils.bin.path,
     )
 
     ctx.actions.write(
@@ -89,6 +89,9 @@ tf_plan = rule(
             default = "10",
         ),
         "silent_refresh": attr.bool(
+            default = True,
+        ),
+        "system_utils": attr.bool(
             default = True,
         ),
     },

@@ -30,7 +30,7 @@ def _impl(ctx):
 
     script = _TF_INIT_SCRIPT.format(
         out_tar = out.path,
-        tar_path = tar.tarinfo.binary.path,
+        tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_cmd = tf_cmd.format(
 	    tf_path = tf.exec.path,
 	    tf_dir  = ctx.label.package,
@@ -72,6 +72,9 @@ tf_init = rule(
         ),
         "verbose": attr.bool(
             default = False,
+        ),
+        "system_utils": attr.bool(
+            default = True,
         ),
     },
     toolchains = [

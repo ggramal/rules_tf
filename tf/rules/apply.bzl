@@ -38,12 +38,12 @@ def _impl(ctx):
 
     script = _TF_APPLY_SCRIPT.format(
         tf_init_tar = tf_init_tar_path,
-        tar_path = tar.tarinfo.binary.path,
+        tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_path = tf.exec.path,
         tf_parallelism = ctx.attr.parallelism,
         tf_dir = ctx.label.package,
         tf_plan = tf_plan_file.basename,
-        coreutils_path = coreutils.bin.path,
+        coreutils_path = "" if ctx.attr.system_utils else coreutils.bin.path,
     )
 
     ctx.actions.write(
@@ -80,6 +80,9 @@ tf_apply = rule(
         ),
         "parallelism": attr.string(
             default = "10",
+        ),
+        "system_utils": attr.bool(
+            default = True,
         ),
     },
     toolchains = [

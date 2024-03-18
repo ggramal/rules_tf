@@ -1,6 +1,6 @@
 # rules_tf 
 
-Bazel rules for running terraform plan/apply/validate/fmt and terraform binary itself in a hermetic way
+Bazel rules for running terraform plan/apply/validate/fmt and terraform binary itself
 
 
 ## Installation

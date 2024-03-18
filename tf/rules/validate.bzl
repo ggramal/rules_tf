@@ -26,7 +26,7 @@ def _impl(ctx):
 
     script = _TF_VALIDATE_SCRIPT.format(
         tf_init_tar = tf_init_tar_path,
-        tar_path = tar.tarinfo.binary.path,
+        tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_path = tf.exec.path,
         tf_dir = ctx.label.package,
     )
@@ -57,6 +57,9 @@ tf_validate_test = rule(
         "init": attr.label(
             mandatory = True,
             providers = [TerraformInitInfo],
+        ),
+        "system_utils": attr.bool(
+            default = True,
         ),
     },
     test = True,
