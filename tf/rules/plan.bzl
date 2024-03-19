@@ -59,6 +59,7 @@ def _impl(ctx):
 
     ctx.actions.run(
         executable = launcher,
+        use_default_shell_env = True,
         inputs = deps,
         tools = [
             tar.tarinfo.binary,
