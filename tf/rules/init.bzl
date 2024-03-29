@@ -4,7 +4,7 @@ This module contains build rules for tf init.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo")
 
-_TF_INIT_SCRIPT = """#!/usr/bin/env bash
+_TF_SCRIPT = """#!/usr/bin/env bash
 set -o pipefail -o errexit -o nounset
 
 {tf_cmd}
@@ -28,7 +28,7 @@ def _impl(ctx):
 
     launcher = ctx.actions.declare_file("init_%s.sh" % ctx.label.name)
 
-    script = _TF_INIT_SCRIPT.format(
+    script = _TF_SCRIPT.format(
         out_tar = out.path,
         tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_cmd = tf_cmd.format(

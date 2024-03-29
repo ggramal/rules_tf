@@ -4,7 +4,7 @@ This module contains build rules for tf plan.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo", "TerraformPlanInfo")
 
-_TF_PLAN_SCRIPT = """#!/usr/bin/env bash
+_TF_SCRIPT = """#!/usr/bin/env bash
 set -o pipefail -o errexit -o nounset
 
 readonly TF_OUT_FILE=$({coreutils_path} basename {tf_out})
@@ -31,7 +31,7 @@ def _impl(ctx):
     if ctx.attr.silent_refresh:
         tf_cmd = "{tf_path} -chdir={tf_dir} plan -out=$TF_OUT_FILE -parallelism={tf_parallelism} > /dev/null && {tf_path} -chdir={tf_dir} show $TF_OUT_FILE || exit $?"
 
-    script = _TF_PLAN_SCRIPT.format(
+    script = _TF_SCRIPT.format(
         tf_init_tar = tf_init_tar.path,
         tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_path = tf.exec.path,

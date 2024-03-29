@@ -4,7 +4,7 @@ This module contains test rules for tf validate.
 
 load("//tf/rules:providers.bzl", "TerraformInitInfo")
 
-_TF_VALIDATE_SCRIPT = """#!/usr/bin/env bash
+_TF_SCRIPT = """#!/usr/bin/env bash
 set -o pipefail -o errexit -o nounset
 
 {tar_path} -C {tf_dir} -xzf {tf_init_tar}
@@ -24,7 +24,7 @@ def _impl(ctx):
 
     launcher = ctx.actions.declare_file("validate_%s.sh" % ctx.label.name)
 
-    script = _TF_VALIDATE_SCRIPT.format(
+    script = _TF_SCRIPT.format(
         tf_init_tar = tf_init_tar_path,
         tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_path = tf.exec.path,
