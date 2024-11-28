@@ -37,7 +37,7 @@ def _impl(ctx):
         is_executable = True,
     )
 
-    deps = ctx.files.srcs + ctx.files.init + tar.default.files.to_list() + [
+    deps = ctx.files.srcs + ctx.files.init + [
         tf.exec,
         tar.tarinfo.binary,
     ]
@@ -59,7 +59,7 @@ tf_validate_test = rule(
             providers = [TerraformInitInfo],
         ),
         "system_utils": attr.bool(
-            default = True,
+            default = False,
         ),
     },
     test = True,
