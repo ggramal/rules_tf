@@ -9,10 +9,10 @@ def _impl(ctx):
     host_os, host_arch = detect_host_platform(ctx)
 
     for module in ctx.modules:
-        for index, version_tag in enumerate(module.tags.toolchain):  # buildifier: disable=unused-variable
+        for index, tag in enumerate(module.tags.toolchain):  # buildifier: disable=unused-variable
             terraform_download(
-                name = "tf_executable",
-                version = version_tag.version,
+                name = tag.name,
+                version = tag.version,
                 os = host_os,
                 arch = host_arch,
             )
@@ -20,6 +20,7 @@ def _impl(ctx):
 _version = tag_class(
     attrs = {
         "version": attr.string(mandatory = True),
+        "name": attr.string(default = "tf_executable")
     },
 )
 
