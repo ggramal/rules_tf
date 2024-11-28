@@ -4,17 +4,20 @@ module(
 )
 
 bazel_dep(name = "rules_license", version = "0.0.8")
-bazel_dep(name = "aspect_bazel_lib", version = "2.5.0")
-bazel_dep(name = "platforms", version = "0.0.8")
-bazel_dep(name = "buildifier_prebuilt", version = "6.4.0")
+bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
+bazel_dep(name = "platforms", version = "0.0.10")
+bazel_dep(name = "buildifier_prebuilt", version = "7.3.1")
 
-tf = use_extension("@rules_tf//tf:extensions.bzl", "tf")
-#tf.toolchain(version = "1.5.4")
+tf = use_extension("//tf:extensions.bzl", "tf")
+tf.toolchain(
+    name = "terraform_executable",
+    version = "1.7.4",
+)
 use_repo(
     tf,
-    "tf_executable",
+    "terraform_executable",
 )
 
 register_toolchains(
-    "@tf_executable//:all",
+    "@terraform_executable//:all",
 )

@@ -20,7 +20,7 @@ def _impl(ctx):
 _version = tag_class(
     attrs = {
         "version": attr.string(mandatory = True),
-        "name": attr.string(default = "tf_executable")
+        "name": attr.string(default = "tf_executable"),
     },
 )
 
