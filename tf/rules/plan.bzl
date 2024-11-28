@@ -7,11 +7,19 @@ load("//tf/rules:providers.bzl", "TerraformInitInfo", "TerraformPlanInfo")
 _TF_SCRIPT = """#!/usr/bin/env bash
 set -o pipefail -o errexit -o nounset
 
-readonly TF_OUT_FILE=$({coreutils_path} basename {tf_out})
+#There are some cases in which we would
+#like to use .tf files after they are processed
+#by other targets (for example setting tf backend
+#attributes). By design for build rules like init,plan,
+#those files are placed under bazel-out/cpu-compilation_mode/bin
+#In order to use those .tf files we need to put
+#them inside execpath
+
+{coreutils_path} cp -r {bin_dir}/* .
 
 {tar_path} -C {tf_dir} -xzf {tf_init_tar}
 {tf_cmd}
-{coreutils_path} cp {tf_dir}/$TF_OUT_FILE {tf_out}
+{coreutils_path} cp {tf_dir}/{tf_out_file} {tf_out}
 """
 
 def _impl(ctx):
@@ -26,12 +34,13 @@ def _impl(ctx):
 
     launcher = ctx.actions.declare_file("plan_%s.sh" % ctx.label.name)
 
-    tf_cmd = "{tf_path} -chdir={tf_dir} plan -out=$TF_OUT_FILE -parallelism={tf_parallelism}"
+    tf_cmd = "{tf_path} -chdir={tf_dir} plan -out={tf_out_file} -parallelism={tf_parallelism}"
 
     if ctx.attr.silent_refresh:
-        tf_cmd = "{tf_path} -chdir={tf_dir} plan -out=$TF_OUT_FILE -parallelism={tf_parallelism} > /dev/null && {tf_path} -chdir={tf_dir} show $TF_OUT_FILE || exit $?"
+        tf_cmd = "{tf_path} -chdir={tf_dir} plan -out={tf_out_file} -parallelism={tf_parallelism} > /dev/null && {tf_path} -chdir={tf_dir} show {tf_out_file} || exit $?"
 
     script = _TF_SCRIPT.format(
+        bin_dir = ctx.bin_dir.path,
         tf_init_tar = tf_init_tar.path,
         tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
         tf_path = tf.exec.path,
@@ -39,9 +48,11 @@ def _impl(ctx):
             tf_parallelism = ctx.attr.parallelism,
             tf_path = tf.exec.path,
             tf_dir = ctx.label.package,
+            tf_out_file = out.basename,
         ),
         tf_dir = ctx.label.package,
         tf_out = out.path,
+        tf_out_file = out.basename,
         coreutils_path = "" if ctx.attr.system_utils else coreutils.bin.path,
     )
 
@@ -53,8 +64,7 @@ def _impl(ctx):
 
     deps = depset(
         ctx.files.srcs +
-        ctx.files.init +
-        tar.default.files.to_list(),
+        ctx.files.init,
     )
 
     ctx.actions.run(
@@ -93,7 +103,7 @@ tf_plan = rule(
             default = True,
         ),
         "system_utils": attr.bool(
-            default = True,
+            default = False,
         ),
     },
     toolchains = [

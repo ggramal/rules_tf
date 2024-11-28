@@ -1,5 +1,6 @@
 #Bazel files
 bazel-*
+MODULE.bazel.lock
 
 # vim swp
 *.swp

@@ -20,7 +20,7 @@ toolchain_type(
 )
 
 buildifier(
-    name = "buildifier",
+    name = "lint",
     exclude_patterns = ["./.git/*"],
     lint_mode = "fix",
     mode = "fix",
@@ -28,7 +28,7 @@ buildifier(
 )
 
 buildifier(
-    name = "buildifier_check",
+    name = "lint_check",
     exclude_patterns = ["./.git/*"],
     lint_mode = "warn",
     mode = "diff",

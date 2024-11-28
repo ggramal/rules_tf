@@ -5,7 +5,6 @@ This module contains run rules for tf apply.
 load("//tf/rules:providers.bzl", "TerraformInitInfo", "TerraformPlanInfo")
 
 _TF_SCRIPT = """#!/usr/bin/env bash
-
 {tar_path} -C {tf_dir} -xzf {tf_init_tar}
 {tf_path} -chdir={tf_dir} apply -parallelism={tf_parallelism} {tf_plan}
 
@@ -52,7 +51,7 @@ def _impl(ctx):
         is_executable = True,
     )
 
-    deps = ctx.files.srcs + ctx.files.init + ctx.files.plan + tar.default.files.to_list() + [
+    deps = ctx.files.srcs + ctx.files.init + ctx.files.plan + [
         tf.exec,
         tar.tarinfo.binary,
         coreutils.bin,
