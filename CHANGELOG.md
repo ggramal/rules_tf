@@ -6,3 +6,7 @@ changes:
   * `MODULE.bazel.lock` file is removed
   * default value of `system_utils` attribute for all rules is now `False`. Which means tar/coreutils toolchains are being used
   * rule name attribute is added to `toolchain` module extension tag
+  * dependency versions are updated
+    * `aspect_bazel_lib` - 2.5.0 -> 2.9.4
+    * `plaforms` - `0.0.8` -> `0.0.10`
+    * `buildifier_prebuilt` - `6.4.0` -> `7.3.1`
