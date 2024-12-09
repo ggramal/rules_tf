@@ -24,10 +24,7 @@ def _impl(ctx):
     tf_init_tar = ctx.attr.init[TerraformInitInfo].init_archive
     tf_plan_file = ctx.attr.plan[TerraformPlanInfo].plan
 
-    tf_init_tar_path = "{dir}/{file}".format(
-        dir = ctx.label.package,
-        file = tf_init_tar.basename,
-    )
+    tf_init_tar_path = tf_init_tar.path.removeprefix(ctx.bin_dir.path + "/")
 
     tar = ctx.toolchains["@aspect_bazel_lib//lib:tar_toolchain_type"]
     coreutils = ctx.toolchains["@aspect_bazel_lib//lib:coreutils_toolchain_type"].coreutils_info

@@ -14,10 +14,7 @@ set -o pipefail -o errexit -o nounset
 def _impl(ctx):
     tf_init_tar = ctx.attr.init[TerraformInitInfo].init_archive
 
-    tf_init_tar_path = "{dir}/{file}".format(
-        dir = ctx.label.package,
-        file = tf_init_tar.basename,
-    )
+    tf_init_tar_path = tf_init_tar.path.removeprefix(ctx.bin_dir.path + "/")
 
     tar = ctx.toolchains["@aspect_bazel_lib//lib:tar_toolchain_type"]
     tf = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
