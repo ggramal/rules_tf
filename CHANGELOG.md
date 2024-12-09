@@ -1,4 +1,10 @@
-* v0.4.0
+# v0.4.1
+
+fixes:
+  * fixed issue when executable/test rules are referencing `init` from another package https://github.com/ggramal/rules_tf/issues/5
+
+
+# v0.4.0
 
 changes:
   * `tf_init`/`tf_plan` rules now copy files from bazel-out to exec path https://github.com/ggramal/rules_tf/issues/1
