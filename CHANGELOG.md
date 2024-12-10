@@ -1,3 +1,9 @@
+# v0.5.0
+
+features:
+  * `tf_fmt` rule
+
+
 # v0.4.1
 
 fixes:
