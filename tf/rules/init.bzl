@@ -38,7 +38,6 @@ def _impl(ctx):
     if ctx.attr.verbose == False:
         tf_cmd = tf_cmd + " > /dev/null"
 
-    print(tf_cmd)
     out = ctx.actions.declare_file("init_%s.tar.gz" % ctx.label.name)
 
     launcher = ctx.actions.declare_file("init_%s.sh" % ctx.label.name)
