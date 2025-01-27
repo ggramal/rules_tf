@@ -29,11 +29,16 @@ def _impl(ctx):
     if ctx.attr.backend:
         backend = "true"
 
-    tf_cmd = "{tf_path} -chdir={tf_dir} init -backend={tf_backend} > /dev/null"
+    tf_cmd = "{tf_path} -chdir={tf_dir} init -backend={tf_backend}"
 
-    if ctx.attr.verbose:
-        tf_cmd = "{tf_path} -chdir={tf_dir} init -backend={tf_backend}"
+    if ctx.attr.backend_configs:
+        for k, v in ctx.attr.backend_configs.items():
+            tf_cmd = tf_cmd + ' -backend-config="{}={}"'.format(k, v)
 
+    if ctx.attr.verbose == False:
+        tf_cmd = tf_cmd + " > /dev/null"
+
+    print(tf_cmd)
     out = ctx.actions.declare_file("init_%s.tar.gz" % ctx.label.name)
 
     launcher = ctx.actions.declare_file("init_%s.sh" % ctx.label.name)
@@ -87,6 +92,9 @@ tf_init = rule(
         ),
         "system_utils": attr.bool(
             default = False,
+        ),
+        "backend_configs": attr.string_dict(
+            default = {},
         ),
     },
     toolchains = [
