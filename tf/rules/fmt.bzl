@@ -7,7 +7,7 @@ def _impl(ctx):
     tf = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
 
     args = "fmt -recursive -check"
-    if ctx.attr.generator_function == "tf_fmt":
+    if not ctx.attr.testonly:
         args = "fmt -recursive {check}".format(
             check = "" if ctx.attr.fix else "-check",
         )

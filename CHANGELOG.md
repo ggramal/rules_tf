@@ -1,7 +1,15 @@
+# v0.6.0
+
+features:
+  * `tf_init`: new attribute `backend_configs` used to set tf backend configuration via bazel https://github.com/ggramal/rules_tf/issues/9
+
+fixes:
+  * `tf_fmt`: fix issue with targets that have `fix = True` and are generated in macros
+
 # v0.5.0
 
 features:
-  * `tf_fmt` rule
+  * `tf_fmt`: rule
 
 
 # v0.4.1
