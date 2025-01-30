@@ -1,3 +1,8 @@
+# v0.6.1
+
+fixes:
+  * `tf_bin`: fix issue when passed arguments have spaces in them
+
 # v0.6.0
 
 features:
