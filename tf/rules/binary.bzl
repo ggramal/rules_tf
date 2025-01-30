@@ -8,7 +8,7 @@ _TF_SCRIPT = """#!/usr/bin/env bash
 set -o pipefail -o errexit -o nounset
 
 {tar_path} -C {tf_dir} -xzf {tf_init_tar}
-{tf_cmd} $@
+{tf_cmd} "$@"
 """
 
 def _impl(ctx):
