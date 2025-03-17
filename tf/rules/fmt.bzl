@@ -5,6 +5,7 @@ This module contains test rules for tf fmt.
 def _impl(ctx):
     launcher = ctx.actions.declare_file("fmt_%s.sh" % ctx.label.name)
     tf = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
+    tf_path = tf.exec.path.replace("external","..",1)
 
     args = "fmt -recursive -check"
     if not ctx.attr.testonly:
@@ -13,7 +14,7 @@ def _impl(ctx):
         )
 
     cmd = "{tf} {args}".format(
-        tf = tf.exec.path,
+        tf = tf_path,
         args = args,
     )
 

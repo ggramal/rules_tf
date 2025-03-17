@@ -30,16 +30,20 @@ def _impl(ctx):
     coreutils = ctx.toolchains["@aspect_bazel_lib//lib:coreutils_toolchain_type"].coreutils_info
     tf = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
 
+    tar_path = tar.tarinfo.binary.path.replace("external","..",1)
+    tf_path  = tf.exec.path.replace("external","..",1)
+    coreutils_path = coreutils.bin.path.replace("external","..",1)
+
     launcher = ctx.actions.declare_file("apply_%s.sh" % ctx.label.name)
 
     script = _TF_SCRIPT.format(
         tf_init_tar = tf_init_tar_path,
-        tar_path = "tar" if ctx.attr.system_utils else tar.tarinfo.binary.path,
-        tf_path = tf.exec.path,
+        tar_path = "tar" if ctx.attr.system_utils else tar_path,
+        tf_path = tf_path,
         tf_parallelism = ctx.attr.parallelism,
         tf_dir = ctx.label.package,
         tf_plan = tf_plan_file.basename,
-        coreutils_path = "" if ctx.attr.system_utils else coreutils.bin.path,
+        coreutils_path = "" if ctx.attr.system_utils else coreutils_path,
     )
 
     ctx.actions.write(
@@ -78,7 +82,7 @@ tf_apply = rule(
             default = "10",
         ),
         "system_utils": attr.bool(
-            default = True,
+            default = False,
         ),
     },
     toolchains = [
