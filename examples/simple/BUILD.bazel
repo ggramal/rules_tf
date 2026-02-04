@@ -1,0 +1,37 @@
+load(
+    "@rules_tf//tf:defs.bzl",
+    "tf_apply",
+    "tf_init",
+    "tf_plan",
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob(
+        [
+            "*.tf",
+        ],
+    ),
+    visibility = ["//visibility:__pkg__"]
+)
+
+tf_init(
+    name = "init",
+    srcs = [
+        "main.tf",
+    ],
+)
+
+tf_plan(
+    name = "plan",
+    srcs = [":srcs"],
+    init = ":init",
+    parallelism = "10",
+)
+
+tf_apply(
+    name = "apply",
+    srcs = [":srcs"],
+    init = ":init",
+    plan = ":plan",
+)
