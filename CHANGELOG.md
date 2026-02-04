@@ -6,6 +6,7 @@ Features:
 
 Enhancements:
 * `.gitignore` - add tf files
+* update tf to v1.14.4
 * updated bazel to 8.1.0
 * updated buildifier_prebuilt to 8.2.1.2
 * updated license to 1.0.0
