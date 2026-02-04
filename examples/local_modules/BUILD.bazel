@@ -16,7 +16,9 @@ filegroup(
             #file if it doesnt exist
             "this.tfstate",
         ],
-    ),
+    ) + [
+        "//modules"
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -35,6 +37,7 @@ tf_init(
     name = "init",
     srcs = [
         "main.tf",
+        "//modules"
     ],
 )
 

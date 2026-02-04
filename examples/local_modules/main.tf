@@ -13,3 +13,12 @@ terraform {
     path = "./this.tfstate"
   }
 }
+
+module "certs" {
+  source   = "../modules/self_sgined_cert/"
+  for_each = local.certs
+
+  cn  = each.value.cn
+  org = each.value.cn
+
+}
