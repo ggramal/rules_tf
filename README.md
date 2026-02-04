@@ -22,6 +22,9 @@ use_repo(tf, "tf_executable")
 
 ## Usage
 
+**Refer to examples folder for a list of real usage examples**
+
+
 Once imported you can use the tf rules in your `BUILD` files like so
 
 ```python
