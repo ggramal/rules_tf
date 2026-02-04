@@ -12,7 +12,7 @@ filegroup(
             "*.tf",
         ],
     ),
-    visibility = ["//visibility:__pkg__"]
+    visibility = ["//visibility:__pkg__"],
 )
 
 tf_init(

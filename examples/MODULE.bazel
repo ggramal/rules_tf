@@ -3,6 +3,7 @@ module(
 )
 
 bazel_dep(name = "buildifier_prebuilt", version = "8.2.1.2", dev_dependency = True)
+
 bazel_dep(name = "rules_tf")
 local_path_override(
     module_name = "rules_tf",
@@ -10,7 +11,6 @@ local_path_override(
 )
 
 tf = use_extension("//tf:extensions.bzl", "tf")
-
 tf.toolchain(version = "1.14.4")
 use_repo(
     tf,
