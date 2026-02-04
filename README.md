@@ -41,8 +41,8 @@ filegroup(
             "*.tf",
             "*.tfvars",
         ],
-    )
-    visibility = ["//visibility:__pkg__"],
+    ),
+    visibility = ["//visibility:__pkg__"]
 )
 
 tf_init(
