@@ -1,3 +1,20 @@
+# v0.8.0
+
+Features:
+* usage examples
+* new `lock` attribute in plan rule that enables/disables locking
+
+Enhancements:
+* `.gitignore` - add tf files
+* updated bazel to 8.1.0
+* updated buildifier_prebuilt to 8.2.1.2
+* updated license to 1.0.0
+* lint fixes
+
+# v0.7.0
+features:
+* adapt tf executable rules to work with bazel 8
+
 # v0.6.1
 
 fixes:
