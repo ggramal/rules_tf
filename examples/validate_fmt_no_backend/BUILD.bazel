@@ -65,4 +65,5 @@ tf_apply(
     init = ":init",
     plan = ":plan",
     tags = ["manual"],
+    visibility = ["//visibility:public"],
 )

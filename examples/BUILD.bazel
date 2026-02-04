@@ -1,5 +1,6 @@
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("@rules_tf//tf:defs.bzl", "tf_fmt")
+load("@rules_multirun//:defs.bzl", "command", "multirun")
 
 sh_binary(
     name = "create_local_states",
@@ -15,7 +16,36 @@ tf_fmt(
         "//simple:srcs",
         "//validate_fmt:srcs",
         "//validate_fmt_no_backend:srcs",
+        "//tf_binary:srcs",
+        "//terraform_block_template:srcs",
     ],
     fix = True,
     tags = ["manual"],
+)
+
+command(
+    name = "local_modules_apply",
+    command = "//local_modules:apply"
+)
+command(
+    name = "simple_apply",
+    command = "//simple:apply"
+)
+command(
+    name = "validate_fmt_no_backend_apply",
+    command = "//validate_fmt_no_backend:apply"
+)
+command(
+    name = "terraform_block_template_apply",
+    command = "//terraform_block_template:apply"
+)
+
+multirun(
+    name = "apply",
+    commands = [
+        ":local_modules_apply",
+        ":simple_apply",
+        ":validate_fmt_no_backend_apply",
+        ":terraform_block_template_apply",
+    ],
 )

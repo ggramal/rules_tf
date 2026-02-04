@@ -32,10 +32,15 @@ In other environments, you should remove `lock = false` and enable state locking
 
 - **Run all `apply` rules**
   ```sh
-  bazel query 'attr(name, "^apply$", "//...")' | xargs -I{} bazel run {}
+  bazel run //:apply
   ```
 
 - **Fix all lint issues**
   ```sh
    bazel run //:lint_fix_tf
+  ```
+
+- **Binary tf execution**
+  ```sh
+   bazel run //tf_binary:tf version
   ```
