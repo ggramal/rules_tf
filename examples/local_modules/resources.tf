@@ -6,6 +6,6 @@ resource "null_resource" "cluster" {
 }
 
 resource "random_password" "pass" {
-  length           = 32
-  special          = false
+  length  = 32
+  special = false
 }

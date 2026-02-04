@@ -1,0 +1,21 @@
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@rules_tf//tf:defs.bzl", "tf_fmt")
+
+sh_binary(
+    name = "create_local_states",
+    srcs = [
+        "create_local_states.sh",
+    ],
+)
+
+tf_fmt(
+    name = "lint_fix_tf",
+    srcs = [
+        "//local_modules:srcs",
+        "//simple:srcs",
+        "//validate_fmt:srcs",
+        "//validate_fmt_no_backend:srcs",
+    ],
+    fix = True,
+    tags = ["manual"],
+)

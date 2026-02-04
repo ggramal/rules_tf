@@ -111,7 +111,7 @@ filegroup(
             "*.tf",
             "*.tfvars",
         ],
-    )
+    ),
     visibility = ["//visibility:__pkg__"],
 )
 

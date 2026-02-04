@@ -1,0 +1,35 @@
+load(
+    "@rules_tf//tf:defs.bzl",
+    "tf_fmt",
+    "tf_fmt_test",
+    "tf_init",
+    "tf_validate_test",
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob(
+        [
+            "*.tf",
+        ],
+    ),
+    visibility = ["//visibility:public"],
+)
+
+tf_validate_test(
+    name = "validate",
+    srcs = [":srcs"],
+    init = ":init",
+)
+
+tf_fmt_test(
+    name = "fmt",
+    srcs = [":srcs"],
+)
+
+tf_init(
+    name = "init",
+    srcs = [
+        "main.tf",
+    ],
+)

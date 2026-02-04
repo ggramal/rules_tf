@@ -1,8 +1,11 @@
 load(
     "@rules_tf//tf:defs.bzl",
     "tf_apply",
+    "tf_binary",
+    "tf_fmt_test",
     "tf_init",
     "tf_plan",
+    "tf_validate_test",
 )
 
 filegroup(
@@ -10,13 +13,29 @@ filegroup(
     srcs = glob(
         [
             "*.tf",
-            #You have to create this
-            #file if it doesnt exist
             "this.tfstate",
         ],
-        allow_empty = True,
     ),
     visibility = ["//visibility:public"],
+)
+
+tf_validate_test(
+    name = "validate",
+    srcs = [":srcs"],
+    init = ":init_for_tests",
+)
+
+tf_fmt_test(
+    name = "fmt",
+    srcs = [":srcs"],
+)
+
+tf_init(
+    name = "init_for_tests",
+    srcs = [
+        "main.tf",
+    ],
+    backend = False,
 )
 
 tf_init(
@@ -24,27 +43,26 @@ tf_init(
     srcs = [
         "main.tf",
     ],
+    tags = ["manual"],
 )
 
 tf_plan(
     name = "plan",
-    srcs = [
-        ":srcs",
-    ],
+    srcs = [":srcs"],
     init = ":init",
+    parallelism = "100",
     #We do not lock here
     #because build rules run
     #in sandbox environments
     #in which files are immutable
     lock = False,
-    parallelism = "100",
+    tags = ["manual"],
 )
 
 tf_apply(
     name = "apply",
-    srcs = [
-        ":srcs",
-    ],
+    srcs = [":srcs"],
     init = ":init",
     plan = ":plan",
+    tags = ["manual"],
 )
