@@ -1,8 +1,7 @@
 load(
     "@rules_tf//tf:defs.bzl",
-    "tf_plan",
-    "tf_init",
     "tf_binary",
+    "tf_init",
 )
 
 filegroup(

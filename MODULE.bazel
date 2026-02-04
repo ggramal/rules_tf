@@ -9,12 +9,10 @@ bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "buildifier_prebuilt", version = "8.2.1.2")
 
 tf = use_extension("//tf:extensions.bzl", "tf")
-
 tf.toolchain(
+    name = "terraform_executable",
     version = "1.14.4",
-    name = "terraform_executable"
 )
-
 use_repo(
     tf,
     "terraform_executable",
