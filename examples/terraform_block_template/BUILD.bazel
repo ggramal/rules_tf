@@ -1,0 +1,60 @@
+load(
+    "@rules_tf//tf:defs.bzl",
+    "tf_apply",
+    "tf_init",
+    "tf_plan",
+)
+load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
+
+expand_template(
+    name = "main_tf",
+    substitutions = {
+        "{state_file}": package_name().split("/")[-1],
+    },
+    template = ":main.tf.tpl",
+    out = "main.tf",
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob(
+        [
+            "*.tf",
+            "{}.tfstate".format(package_name().split("/")[-1])
+        ],
+        allow_empty = True,
+    ) + [ ":main_tf"],
+    visibility = ["//visibility:public"],
+)
+
+
+
+tf_init(
+    name = "init",
+    srcs = [
+        "main_tf",
+    ],
+)
+
+tf_plan(
+    name = "plan",
+    srcs = [
+        ":srcs",
+    ],
+    init = ":init",
+    #We do not lock here
+    #because build rules run
+    #in sandbox environments
+    #in which files are immutable
+    lock = False,
+    parallelism = "100",
+)
+
+tf_apply(
+    name = "apply",
+    srcs = [
+        ":srcs",
+    ],
+    init = ":init",
+    plan = ":plan",
+)
