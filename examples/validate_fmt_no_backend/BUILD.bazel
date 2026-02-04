@@ -1,7 +1,6 @@
 load(
     "@rules_tf//tf:defs.bzl",
     "tf_apply",
-    "tf_binary",
     "tf_fmt_test",
     "tf_init",
     "tf_plan",
@@ -13,9 +12,10 @@ filegroup(
     srcs = glob(
         [
             "*.tf",
-            "this.tfstate",
         ],
-    ),
+    ) + [
+        "this.tfstate",
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -50,12 +50,12 @@ tf_plan(
     name = "plan",
     srcs = [":srcs"],
     init = ":init",
-    parallelism = "100",
     #We do not lock here
     #because build rules run
     #in sandbox environments
     #in which files are immutable
     lock = False,
+    parallelism = "100",
     tags = ["manual"],
 )
 

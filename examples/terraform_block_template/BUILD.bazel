@@ -1,18 +1,20 @@
+load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
 load(
     "@rules_tf//tf:defs.bzl",
     "tf_apply",
     "tf_init",
     "tf_plan",
 )
-load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
+
+tf_state_file = package_name().split("/")[-1] + ".tfstate"
 
 expand_template(
     name = "main_tf",
+    out = "main.tf",
     substitutions = {
-        "{state_file}": package_name().split("/")[-1],
+        "{state_file}": tf_state_file,
     },
     template = ":main.tf.tpl",
-    out = "main.tf",
 )
 
 filegroup(
@@ -20,14 +22,13 @@ filegroup(
     srcs = glob(
         [
             "*.tf",
-            "{}.tfstate".format(package_name().split("/")[-1])
         ],
-        allow_empty = True,
-    ) + [ ":main_tf"],
+    ) + [
+        ":main_tf",
+        tf_state_file,
+    ],
     visibility = ["//visibility:public"],
 )
-
-
 
 tf_init(
     name = "init",

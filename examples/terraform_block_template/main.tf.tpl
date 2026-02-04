@@ -8,6 +8,6 @@ terraform {
     }
   }
   backend "local" {
-    path = "./{state_file}.tfstate"
+    path = "./{state_file}"
   }
 }

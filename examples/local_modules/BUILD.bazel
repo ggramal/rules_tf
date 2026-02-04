@@ -12,12 +12,12 @@ filegroup(
     srcs = glob(
         [
             "*.tf",
-            #You have to create this
-            #file if it doesnt exist
-            "this.tfstate",
         ],
     ) + [
-        "//modules"
+        "//modules",
+        #You have to create this
+        #file if it doesnt exist
+        "this.tfstate",
     ],
     visibility = ["//visibility:public"],
 )
@@ -37,7 +37,7 @@ tf_init(
     name = "init",
     srcs = [
         "main.tf",
-        "//modules"
+        "//modules",
     ],
 )
 

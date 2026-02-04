@@ -1,6 +1,5 @@
 load(
     "@rules_tf//tf:defs.bzl",
-    "tf_fmt",
     "tf_fmt_test",
     "tf_init",
     "tf_validate_test",
