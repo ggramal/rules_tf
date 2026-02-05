@@ -1,0 +1,8 @@
+filegroup(
+    name = "modules",
+    srcs = glob(
+        ["**"],
+        exclude = ["BUILD.bazel"],
+    ),
+    visibility = ["//visibility:public"],
+)

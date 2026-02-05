@@ -14,3 +14,12 @@ MODULE.bazel.lock
 
 ## Idea ##
 .ijwb
+
+## Tf ##
+*.tfstate
+.terraform.lock.hcl
+debug.tf
+terraform.tfplan
+.terraform/
+.aws.env
+.aws.profile

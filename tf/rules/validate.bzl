@@ -18,8 +18,8 @@ def _impl(ctx):
 
     tar = ctx.toolchains["@aspect_bazel_lib//lib:tar_toolchain_type"]
     tf = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
-    tar_path = tar.tarinfo.binary.path.replace("external","..",1)
-    tf_path  = tf.exec.path.replace("external","..",1)
+    tar_path = tar.tarinfo.binary.path.replace("external", "..", 1)
+    tf_path = tf.exec.path.replace("external", "..", 1)
 
     launcher = ctx.actions.declare_file("validate_%s.sh" % ctx.label.name)
 

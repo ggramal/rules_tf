@@ -34,10 +34,10 @@ def _impl(ctx):
 
     launcher = ctx.actions.declare_file("plan_%s.sh" % ctx.label.name)
 
-    tf_cmd = "{tf_path} -chdir={tf_dir} plan -out={tf_out_file} -parallelism={tf_parallelism}"
+    tf_cmd = "{tf_path} -chdir={tf_dir} plan -lock={tf_lock} -out={tf_out_file} -parallelism={tf_parallelism}"
 
     if ctx.attr.silent_refresh:
-        tf_cmd = "{tf_path} -chdir={tf_dir} plan -out={tf_out_file} -parallelism={tf_parallelism} > /dev/null && {tf_path} -chdir={tf_dir} show {tf_out_file} || exit $?"
+        tf_cmd = tf_cmd + " > /dev/null && {tf_path} -chdir={tf_dir} show {tf_out_file} || exit $?"
 
     script = _TF_SCRIPT.format(
         bin_dir = ctx.bin_dir.path,
@@ -48,6 +48,7 @@ def _impl(ctx):
             tf_parallelism = ctx.attr.parallelism,
             tf_path = tf.exec.path,
             tf_dir = ctx.label.package,
+            tf_lock = ctx.attr.lock,
             tf_out_file = out.basename,
         ),
         tf_dir = ctx.label.package,
@@ -104,6 +105,9 @@ tf_plan = rule(
         ),
         "system_utils": attr.bool(
             default = False,
+        ),
+        "lock": attr.bool(
+            default = True,
         ),
     },
     toolchains = [

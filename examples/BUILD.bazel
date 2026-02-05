@@ -1,0 +1,72 @@
+load("@buildifier_prebuilt//:rules.bzl", "buildifier", "buildifier_test")
+load("@rules_multirun//:defs.bzl", "command", "multirun")
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@rules_tf//tf:defs.bzl", "tf_fmt")
+
+sh_binary(
+    name = "create_local_states",
+    srcs = [
+        "create_local_states.sh",
+    ],
+)
+
+tf_fmt(
+    name = "lint_fix_tf",
+    srcs = [
+        "//local_modules:srcs",
+        "//simple:srcs",
+        "//terraform_block_template:srcs",
+        "//tf_binary:srcs",
+        "//validate_fmt:srcs",
+        "//validate_fmt_no_backend:srcs",
+    ],
+    fix = True,
+    tags = ["manual"],
+)
+
+command(
+    name = "local_modules_apply",
+    command = "//local_modules:apply",
+)
+
+command(
+    name = "simple_apply",
+    command = "//simple:apply",
+)
+
+command(
+    name = "validate_fmt_no_backend_apply",
+    command = "//validate_fmt_no_backend:apply",
+)
+
+command(
+    name = "terraform_block_template_apply",
+    command = "//terraform_block_template:apply",
+)
+
+multirun(
+    name = "apply",
+    commands = [
+        ":local_modules_apply",
+        ":simple_apply",
+        ":validate_fmt_no_backend_apply",
+        ":terraform_block_template_apply",
+    ],
+)
+
+buildifier(
+    name = "lint_fix_bzl",
+    exclude_patterns = ["./.git/*"],
+    lint_mode = "fix",
+    mode = "fix",
+    tags = ["manual"],
+)
+
+buildifier_test(
+    name = "lint",
+    exclude_patterns = ["./.git/*"],
+    lint_mode = "warn",
+    mode = "diff",
+    no_sandbox = True,
+    workspace = "//:MODULE.bazel",
+)

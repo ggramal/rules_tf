@@ -1,4 +1,4 @@
-load("@buildifier_prebuilt//:rules.bzl", "buildifier")
+load("@buildifier_prebuilt//:rules.bzl", "buildifier", "buildifier_test")
 load("@rules_license//rules:license.bzl", "license")
 
 package(
@@ -20,17 +20,18 @@ toolchain_type(
 )
 
 buildifier(
-    name = "lint",
+    name = "lint_fix_bzl",
     exclude_patterns = ["./.git/*"],
     lint_mode = "fix",
     mode = "fix",
     tags = ["manual"],
 )
 
-buildifier(
-    name = "lint_check",
+buildifier_test(
+    name = "lint",
     exclude_patterns = ["./.git/*"],
     lint_mode = "warn",
     mode = "diff",
-    tags = ["manual"],
+    no_sandbox = True,
+    workspace = "//:MODULE.bazel",
 )

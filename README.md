@@ -18,9 +18,15 @@ git_override(
 tf = use_extension("@rules_tf//tf:extensions.bzl", "tf")
 tf.toolchain(version = "1.5.4")
 use_repo(tf, "tf_executable")
+register_toolchains(
+    "@tf_executable//:all",
+)
 ```
 
 ## Usage
+
+**Refer to examples folder for a list of real usage examples**
+
 
 Once imported you can use the tf rules in your `BUILD` files like so
 
@@ -41,8 +47,8 @@ filegroup(
             "*.tf",
             "*.tfvars",
         ],
-    )
-    visibility = ["//visibility:__pkg__"],
+    ),
+    visibility = ["//visibility:__pkg__"]
 )
 
 tf_init(
@@ -111,7 +117,7 @@ filegroup(
             "*.tf",
             "*.tfvars",
         ],
-    )
+    ),
     visibility = ["//visibility:__pkg__"],
 )
 
