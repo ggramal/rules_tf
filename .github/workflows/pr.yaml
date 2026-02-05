@@ -1,0 +1,29 @@
+name: Pull requests
+
+on:
+  pull_request:
+    branches:
+    - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: "europe-north1-docker.pkg.dev/svetochdev-internal/containers/bazelisk:v1.28.1"
+    steps:
+    - uses: actions/checkout@v6.0.2
+    - name: test
+      run: |
+        bazel test //...
+        cd examples
+        bazel run //:create_local_states
+        bazel build //...
+        bazel test //...
+        bazel run //:apply
+        bazel run //:lint_fix_tf
+        bazel run //tf_binary:tf version
+        bazel test //...
