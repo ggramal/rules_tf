@@ -13,12 +13,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: "europe-north1-docker.pkg.dev/svetochdev-internal/containers/bazelisk:v1.25.0-2"
+      image: "europe-north1-docker.pkg.dev/svetochdev-internal/containers/bazelisk:v1.28.1"
     steps:
     - uses: actions/checkout@v4.2.2
     - name: test
       run: |
-        echo $HOME
         cd examples
         bazel run //:create_local_states
         bazel build //...
