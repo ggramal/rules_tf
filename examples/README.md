@@ -1,6 +1,6 @@
 ## Usage Examples
 
-This section covers the most common ways to work with the project during development and testing.
+This section covers the most common ways you can use `rules_tf`
 
 ## Notes on State and Locking
 
