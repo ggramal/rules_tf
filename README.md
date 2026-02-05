@@ -18,6 +18,9 @@ git_override(
 tf = use_extension("@rules_tf//tf:extensions.bzl", "tf")
 tf.toolchain(version = "1.5.4")
 use_repo(tf, "tf_executable")
+register_toolchains(
+    "@tf_executable//:all",
+)
 ```
 
 ## Usage
