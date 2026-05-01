@@ -1,12 +1,11 @@
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load(
     "@rules_tf//tf:defs.bzl",
     "tf_apply",
     "tf_init",
-    "tf_plan",
     "tf_output",
-    "tf_binary",
+    "tf_plan",
 )
-load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 filegroup(
     name = "srcs",
@@ -31,11 +30,11 @@ tf_init(
 
 tf_output(
     name = "output",
-    init = ":init",
-    std_out = True,
     srcs = [
         ":srcs",
     ],
+    init = ":init",
+    std_out = True,
 )
 
 tf_plan(
@@ -67,16 +66,10 @@ sh_binary(
     srcs = [
         "output.sh",
     ],
+    data = [
+        ":output",
+    ],
     env = {
         "TF_OUTPUT_FILE": "$(rootpath :output)",
     },
-    data = [
-        ":output"
-    ]
-)
-
-tf_binary(
-    name = "tf",
-    srcs = [":srcs"],
-    init = ":init",
 )

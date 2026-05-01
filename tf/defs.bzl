@@ -6,9 +6,9 @@ load("@rules_tf//tf/rules:apply.bzl", _tf_apply = "tf_apply")
 load("@rules_tf//tf/rules:binary.bzl", _tf_binary = "tf_binary")
 load("@rules_tf//tf/rules:fmt.bzl", _tf_fmt = "tf_fmt", _tf_fmt_test = "tf_fmt_test")
 load("@rules_tf//tf/rules:init.bzl", _tf_init = "tf_init")
+load("@rules_tf//tf/rules:output.bzl", _tf_output = "tf_output")
 load("@rules_tf//tf/rules:plan.bzl", _tf_plan = "tf_plan")
 load("@rules_tf//tf/rules:validate.bzl", _tf_validate_test = "tf_validate_test")
-load("@rules_tf//tf/rules:output.bzl", _tf_output = "tf_output")
 
 tf_init = _tf_init
 tf_plan = _tf_plan
