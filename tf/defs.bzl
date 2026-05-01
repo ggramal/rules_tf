@@ -8,9 +8,11 @@ load("@rules_tf//tf/rules:fmt.bzl", _tf_fmt = "tf_fmt", _tf_fmt_test = "tf_fmt_t
 load("@rules_tf//tf/rules:init.bzl", _tf_init = "tf_init")
 load("@rules_tf//tf/rules:plan.bzl", _tf_plan = "tf_plan")
 load("@rules_tf//tf/rules:validate.bzl", _tf_validate_test = "tf_validate_test")
+load("@rules_tf//tf/rules:output.bzl", _tf_output = "tf_output")
 
 tf_init = _tf_init
 tf_plan = _tf_plan
+tf_output = _tf_output
 tf_apply = _tf_apply
 tf_binary = _tf_binary
 
