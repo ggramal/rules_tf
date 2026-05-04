@@ -1,3 +1,7 @@
+# v0.9.0
+Features:
+* `tf_output` rule
+
 # v0.8.0
 
 Features:
