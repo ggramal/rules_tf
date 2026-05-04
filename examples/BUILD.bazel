@@ -14,6 +14,7 @@ tf_fmt(
     name = "lint_fix_tf",
     srcs = [
         "//local_modules:srcs",
+        "//output:srcs",
         "//simple:srcs",
         "//terraform_block_template:srcs",
         "//tf_binary:srcs",
@@ -44,11 +45,17 @@ command(
     command = "//terraform_block_template:apply",
 )
 
+command(
+    name = "output",
+    command = "//output:apply",
+)
+
 multirun(
     name = "apply",
     commands = [
         ":local_modules_apply",
         ":simple_apply",
+        ":output",
         ":validate_fmt_no_backend_apply",
         ":terraform_block_template_apply",
     ],

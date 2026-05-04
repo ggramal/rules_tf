@@ -15,3 +15,10 @@ TerraformInitInfo = provider(
         "init_archive": "File of archived .terraform dir",
     },
 )
+
+TerraformOutputInfo = provider(
+    doc = "Information about Terraform output.",
+    fields = {
+        "output": "terraform output file in json format",
+    },
+)

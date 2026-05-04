@@ -1,0 +1,75 @@
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load(
+    "@rules_tf//tf:defs.bzl",
+    "tf_apply",
+    "tf_init",
+    "tf_output",
+    "tf_plan",
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob(
+        [
+            "*.tf",
+        ],
+    ) + [
+        #You have to create this
+        #file if it doesnt exist
+        "this.tfstate",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+tf_init(
+    name = "init",
+    srcs = [
+        "main.tf",
+    ],
+)
+
+tf_output(
+    name = "output",
+    srcs = [
+        ":srcs",
+    ],
+    init = ":init",
+    std_out = True,
+)
+
+tf_plan(
+    name = "plan",
+    srcs = [
+        ":srcs",
+    ],
+    init = ":init",
+    #We do not lock here
+    #because build rules run
+    #in sandbox environments
+    #in which files are immutable
+    lock = False,
+    parallelism = "100",
+)
+
+tf_apply(
+    name = "apply",
+    srcs = [
+        ":srcs",
+    ],
+    init = ":init",
+    plan = ":plan",
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "show_output",
+    srcs = [
+        "output.sh",
+    ],
+    data = [
+        ":output",
+    ],
+    env = {
+        "TF_OUTPUT_FILE": "$(rootpath :output)",
+    },
+)
